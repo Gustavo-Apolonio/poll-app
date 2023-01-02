@@ -1,0 +1,18 @@
+.login {
+  height: 100%;
+  width: 100%;
+
+  background-image: url("../../../assets/gifs/insideout.gif");
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  &-center {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

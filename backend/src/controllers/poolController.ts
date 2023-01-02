@@ -14,7 +14,7 @@ class PoolController {
   }
 
   private configureRouter(): void {
-    this.router.post('/create', (req: Request | any, res: Response) => {
+    this.router.get('/create', (req: Request | any, res: Response) => {
       const poolId = this.guid.generate();
 
       req.connectedPools[poolId] = [];
