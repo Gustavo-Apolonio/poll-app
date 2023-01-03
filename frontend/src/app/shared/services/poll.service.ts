@@ -5,14 +5,15 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
+import { PollIdKey } from '../keys';
 import { Poll } from '../models';
-import { PollIdKey } from '../keys/PollId.key';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PollService {
   private baseUrl: string = environment.services.poll.baseUrl;
+  private _pollId: string = '';
 
   constructor(private http: HttpClient) {}
 
@@ -24,16 +25,22 @@ export class PollService {
     return this.http.post<Poll>(`${this.baseUrl}/create`, {});
   }
 
-  enterPoll(pollId: string): void {
-    localStorage.setItem(PollIdKey, pollId);
+  enterPoll(pollId: string): Observable<Poll> {
+    return this.http.post<Poll>(`${this.baseUrl}/enter`, { pollId });
   }
 
   leavePoll(pollId: string): void {
+    this._pollId = '';
     localStorage.removeItem(PollIdKey);
     this.http.delete(`${this.baseUrl}/delete/${pollId}`);
   }
 
   get pollId(): string {
-    return localStorage.getItem(PollIdKey)?.toString() || '';
+    return localStorage.getItem(PollIdKey)?.toString() || this._pollId;
+  }
+
+  set pollId(id: string) {
+    this._pollId = id;
+    localStorage.setItem(PollIdKey, this._pollId);
   }
 }

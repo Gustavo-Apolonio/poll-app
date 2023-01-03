@@ -30,6 +30,27 @@ class PollController {
       res.status(200).send(response);
     });
 
+    this.router.post('/enter', (req: Request | any, res: Response) => {
+      const pollId = req.body.pollId;
+
+      const poll = req.connectedPolls[pollId];
+
+      let response: any;
+
+      if (poll) {
+        response = { ...poll, id: pollId };
+
+        res.status(200).send(response);
+      } else {
+        response = {
+          error: 'Poll id not found',
+          code: 404,
+        };
+
+        res.status(404).send(response);
+      }
+    });
+
     this.router.get('/', (req: Request | any, res: Response) => {
       const connectedPolls = req.connectedPolls;
       const response = Object.keys(connectedPolls)

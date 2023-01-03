@@ -15,9 +15,8 @@
             [matAutocomplete]="auto"
             (focus)="searchPollIds()"
             (keyup.enter)="enterPoll()"
+            (blur)="enterPoll()"
           />
-          <mat-error *ngIf="pollIdState.error">Poll não encontrado</mat-error>
-          <p *ngIf="pollIdState.success">Poll encontrado, entrando...</p>
         </mat-form-field>
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option
@@ -27,6 +26,10 @@
             {{ pollId }}
           </mat-option>
         </mat-autocomplete>
+        <mat-error *ngIf="pollIdState == 'error'"
+          >Poll não encontrado</mat-error
+        >
+        <p *ngIf="pollIdState == 'success'">Poll encontrado, entrando...</p>
       </form>
     </div>
     <div class="main-body-center">
@@ -35,9 +38,9 @@
     <div class="main-body-bottom">
       <button
         type="submit"
-        (click)="$event.preventDefault(); enterPoll(true)"
+        (click)="$event.preventDefault(); createPoll()"
         mat-flat-button
-        [disabled]="enteringPoll"
+        [disabled]="pollIdState == 'loading'"
       >
         Criar um poll
       </button>

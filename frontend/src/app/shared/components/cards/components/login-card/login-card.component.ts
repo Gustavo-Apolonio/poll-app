@@ -8,12 +8,6 @@ import { map, startWith, take } from 'rxjs/operators';
 import { Poll } from 'src/app/shared/models';
 import { PollService } from 'src/app/shared/services';
 
-interface PollIdState {
-  error: boolean;
-  loading: boolean;
-  success: boolean;
-}
-
 @Component({
   selector: 'app-login-card',
   templateUrl: './login-card.component.html',
@@ -22,11 +16,10 @@ interface PollIdState {
 export class LoginCardComponent implements OnInit {
   @Input() title: string = 'Poll';
 
-  pollIdState: PollIdState = { error: false, loading: false, success: false };
+  pollIdState: 'error' | 'loading' | 'success' | null = null;
   pollIdFormController: FormControl = new FormControl('', []);
   pollIds: string[] = [];
   filteredPollIds: Observable<string[]>;
-  enteringPoll: boolean = false;
 
   constructor(private pollService: PollService, private router: Router) {}
 
@@ -58,27 +51,41 @@ export class LoginCardComponent implements OnInit {
     );
   }
 
-  public enterPoll(createPoll: boolean = false): void {
-    if (this.enteringPoll) return;
+  public enterPoll(): void {
+    if (this.pollIdState == 'loading') return;
 
-    this.enteringPoll = true;
+    const { value } = this.pollIdFormController;
 
-    if (createPoll) {
+    if (value) {
+      this.pollIdState = 'loading';
+
       this.pollService
-        .createPoll()
+        .enterPoll(value)
         .pipe(take(1))
-        .subscribe((response) => {
-          this.enteringPoll = false;
-          this.pollService.enterPoll(response.id);
-          this.router.navigateByUrl('/');
+        .subscribe({
+          next: this.successPolling.bind(this),
+          error: () => {
+            this.pollIdState = 'error';
+            this.pollIdFormController.setValue('');
+          },
         });
-    } else {
-      const { value } = this.pollIdFormController;
-      if (value) {
-        this.enteringPoll = false;
-        this.pollService.enterPoll(value);
-        this.router.navigateByUrl('/');
-      }
     }
+  }
+
+  public createPoll(): void {
+    if (this.pollIdState == 'loading') return;
+
+    this.pollIdState = 'loading';
+
+    this.pollService
+      .createPoll()
+      .pipe(take(1))
+      .subscribe(this.successPolling.bind(this));
+  }
+
+  private successPolling(response: Poll): void {
+    this.pollIdState = 'success';
+    this.pollService.pollId = response.id;
+    this.router.navigateByUrl('/');
   }
 }

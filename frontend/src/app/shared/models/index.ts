@@ -1,1 +1,1 @@
-export * from './PollIdModel';
+export * from './PollModel';
