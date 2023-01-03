@@ -1,5 +1,12 @@
 # Frontend
 
+## TODOs
+
+- [ ] Add type on everything
+- [ ] Test frontend
+- [ ] Create a doc on README
+- [ ] Configure environments
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.10.
 
 ## Development server
