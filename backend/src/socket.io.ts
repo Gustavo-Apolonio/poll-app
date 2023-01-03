@@ -5,7 +5,7 @@ import * as SocketIO from 'socket.io';
 class AppSocket {
   private io: SocketIO.Server;
 
-  connectedPools: any = {};
+  connectedPolls: any = {};
 
   constructor(server: Server, app: express.Application) {
     this.io = new SocketIO.Server(server, {
@@ -16,7 +16,7 @@ class AppSocket {
 
     app.use((req: Request | any, res: Response, next) => {
       req.io = this.io;
-      req.connectedPools = this.connectedPools;
+      req.connectedPolls = this.connectedPolls;
 
       return next();
     });
@@ -24,15 +24,15 @@ class AppSocket {
 
   private configureSockets(): void {
     this.io.on('connection', (socket: SocketIO.Socket) => {
-      socket.on('enter-pool', (userSocket: any) => {
-        const { poolId } = userSocket;
-        let id = poolId.toString();
-        const pool = this.connectedPools[id];
+      socket.on('enter-poll', (userSocket: any) => {
+        const { pollId } = userSocket;
+        let id = pollId.toString();
+        const poll = this.connectedPolls[id];
 
-        if (poolId && pool) {
-          this.connectedPools[id]?.connectedUsers?.push(socket.id);
+        if (pollId && poll) {
+          this.connectedPolls[id]?.connectedUsers?.push(socket.id);
         } else {
-          this.io.to(socket.id).emit('non-existing-pool');
+          this.io.to(socket.id).emit('non-existing-poll');
         }
       });
     });

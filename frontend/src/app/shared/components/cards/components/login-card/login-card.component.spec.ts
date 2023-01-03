@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { LoginCardComponent } from './login-card.component';
 
-import { GlassmorphComponent } from './glassmorph.component';
-
-describe('GlassmorphComponent', () => {
-  let component: GlassmorphComponent;
-  let fixture: ComponentFixture<GlassmorphComponent>;
+describe('LoginCardComponent', () => {
+  let component: LoginCardComponent;
+  let fixture: ComponentFixture<LoginCardComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GlassmorphComponent],
+      declarations: [LoginCardComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GlassmorphComponent);
+    fixture = TestBed.createComponent(LoginCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

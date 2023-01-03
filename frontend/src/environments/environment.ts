@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   services: {
-    pool: {
-      baseUrl: 'http://localhost:5000/pool/',
+    poll: {
+      baseUrl: 'http://localhost:5000/poll',
     },
   },
 };

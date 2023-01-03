@@ -7,6 +7,7 @@ import {
   UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
+
 import { AuthService } from '../../services';
 
 @Injectable({
@@ -23,9 +24,9 @@ export class MainGuard implements CanActivate {
     | UrlTree
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree> {
-    const hasPool: boolean = this.authService.hasPool;
+    const hasPoll: boolean = this.authService.hasPoll;
 
-    if (hasPool) {
+    if (hasPoll) {
       return true;
     }
 

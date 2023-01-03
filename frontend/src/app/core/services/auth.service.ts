@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 
+import { PollService } from 'src/app/shared/services';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor() {}
+  constructor(private pollService: PollService) {}
 
-  get hasPool(): boolean {
-    const poolId: string | null = localStorage.getItem('poolId');
-    if (poolId === null) return false;
+  get hasPoll(): boolean {
+    const pollId: string = this.pollService.pollId;
+    if (!pollId || pollId === '') return false;
     else return true;
   }
 }

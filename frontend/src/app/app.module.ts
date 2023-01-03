@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { LoginPageComponentModule, MainPageComponentModule } from './pages';
 import { RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { LoginPageComponentModule, MainPageComponentModule } from './pages';
 
 @NgModule({
   declarations: [AppComponent],

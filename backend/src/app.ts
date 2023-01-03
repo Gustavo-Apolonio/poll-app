@@ -1,7 +1,6 @@
 import express, { Router } from 'express';
 import cors from 'cors';
 import { Server, createServer } from 'http';
-import * as SocketIO from 'socket.io';
 
 import AppSocket from './socket.io';
 
@@ -36,7 +35,7 @@ class App {
 
   public startApp(): void {
     this.server.listen(this.PORT, () =>
-      console.log(`Server running on http://desktop-gustavo:${this.PORT}/`)
+      console.log(`Server running on http://${this.HOSTNAME}:${this.PORT}/`)
     );
   }
 }

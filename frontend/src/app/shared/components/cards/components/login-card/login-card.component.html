@@ -1,0 +1,46 @@
+<div class="main">
+  <div class="main-title">
+    <h1 class="main-title_text">{{ title }}</h1>
+  </div>
+  <div class="main-body">
+    <div class="main-body-top">
+      <form class="main-body-top-form">
+        <mat-form-field appearance="fill">
+          <mat-label>Entre em um poll já existente</mat-label>
+          <input
+            type="search"
+            matInput
+            placeholder="01-AB-23-CD"
+            [formControl]="pollIdFormController"
+            [matAutocomplete]="auto"
+            (focus)="searchPollIds()"
+            (keyup.enter)="enterPoll()"
+          />
+          <mat-error *ngIf="pollIdState.error">Poll não encontrado</mat-error>
+          <p *ngIf="pollIdState.success">Poll encontrado, entrando...</p>
+        </mat-form-field>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let pollId of filteredPollIds | async"
+            [value]="pollId"
+          >
+            {{ pollId }}
+          </mat-option>
+        </mat-autocomplete>
+      </form>
+    </div>
+    <div class="main-body-center">
+      <p class="main-body-center-text">OU</p>
+    </div>
+    <div class="main-body-bottom">
+      <button
+        type="submit"
+        (click)="$event.preventDefault(); enterPoll(true)"
+        mat-flat-button
+        [disabled]="enteringPoll"
+      >
+        Criar um poll
+      </button>
+    </div>
+  </div>
+</div>

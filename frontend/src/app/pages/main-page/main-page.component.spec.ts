@@ -6,8 +6,8 @@ describe('MainPageComponent', () => {
   let component: MainPageComponent;
   let fixture: ComponentFixture<MainPageComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       declarations: [MainPageComponent],
     }).compileComponents();
 

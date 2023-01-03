@@ -1,9 +1,9 @@
 import { Controller } from '../models/ControllerModel';
 
-import poolController from './poolController';
+import pollController from './pollController';
 
 const Controllers: Controller[] = [
-  { route: '/pool', router: poolController.router },
+  { route: '/poll', router: pollController.router },
 ];
 
 export default Controllers;

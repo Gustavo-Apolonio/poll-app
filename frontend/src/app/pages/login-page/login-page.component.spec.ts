@@ -6,11 +6,10 @@ describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
   let fixture: ComponentFixture<LoginPageComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ LoginPageComponent ]
-    })
-    .compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [LoginPageComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LoginPageComponent);
     component = fixture.componentInstance;
