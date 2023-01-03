@@ -8,7 +8,9 @@ class AppSocket {
   connectedPools: any = {};
 
   constructor(server: Server, app: express.Application) {
-    this.io = new SocketIO.Server(server);
+    this.io = new SocketIO.Server(server, {
+      cors: { origin: '*', methods: ['GET', 'POST', 'DELETE'] },
+    });
 
     this.configureSockets();
 
@@ -22,19 +24,18 @@ class AppSocket {
 
   private configureSockets(): void {
     this.io.on('connection', (socket: SocketIO.Socket) => {
-      const { poolId } = socket.handshake.query;
-      if (poolId) {
+      socket.on('enter-pool', (userSocket: any) => {
+        const { poolId } = userSocket;
         let id = poolId.toString();
-        this.connectedPools[id]?.push(socket.id);
-      }
-    });
-  }
+        const pool = this.connectedPools[id];
 
-  public configureNewSocket(
-    on: string,
-    callback: (socket: SocketIO.Socket) => {}
-  ): void {
-    this.io.on(on, callback);
+        if (poolId && pool) {
+          this.connectedPools[id]?.connectedUsers?.push(socket.id);
+        } else {
+          this.io.to(socket.id).emit('non-existing-pool');
+        }
+      });
+    });
   }
 }
 

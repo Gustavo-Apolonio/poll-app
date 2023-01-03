@@ -5,6 +5,8 @@ class PoolController {
   public router: Router;
   private guid: GuidService;
 
+  private DAY: number = 86400000;
+
   constructor() {
     this.guid = new GuidService();
 
@@ -14,30 +16,38 @@ class PoolController {
   }
 
   private configureRouter(): void {
-    this.router.get('/create', (req: Request | any, res: Response) => {
+    this.router.post('/create', (req: Request | any, res: Response) => {
       const poolId = this.guid.generate();
 
-      req.connectedPools[poolId] = [];
-
-      const response = {
-        id: poolId,
-        connectedUsers: req.connectedPools[poolId],
+      req.connectedPools[poolId] = {
+        createdOn: new Date(),
+        connectedUsers: [],
       };
+
+      const response = { ...req.connectedPools[poolId], id: poolId };
 
       res.status(200).send(response);
     });
 
     this.router.get('/', (req: Request | any, res: Response) => {
       const connectedPools = req.connectedPools;
-      const response = Object.keys(connectedPools).map((poolId) => {
-        const usersQuantity = connectedPools[poolId].length;
+      const response = Object.keys(connectedPools)
+        .map((poolId) => {
+          const pool = { ...connectedPools[poolId], id: poolId };
 
-        return {
-          id: poolId,
-          connectedUsers: connectedPools[poolId],
-          usersQuantity,
-        };
-      });
+          return pool;
+        })
+        .filter((pool) => {
+          const date = new Date();
+          date.setDate(date.getDate() - 1);
+          const isAvailable = pool.createdOn - (date as any) <= this.DAY * 2;
+
+          if (!isAvailable) {
+            delete connectedPools[pool.id];
+          }
+
+          return isAvailable;
+        });
       res.status(200).send(response);
     });
 

@@ -8,5 +8,3 @@ Controllers.forEach((controller: Controller) => {
 });
 
 app.startApp();
-
-// TODO: test backend

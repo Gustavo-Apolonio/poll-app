@@ -34,13 +34,6 @@ class App {
     this.app.use(route, controller);
   }
 
-  public configureNewSocket(
-    on: string,
-    callback: (socket: SocketIO.Socket) => {}
-  ): void {
-    this.socket.configureNewSocket(on, callback);
-  }
-
   public startApp(): void {
     this.server.listen(this.PORT, () =>
       console.log(`Server running on http://desktop-gustavo:${this.PORT}/`)
