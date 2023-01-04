@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Gustavo-Apolonio/pool-app.git"
+    "url": "git+https://github.com/Gustavo-Apolonio/poll-app.git"
   },
   "author": "Gustavo Apolonio",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Gustavo-Apolonio/pool-app/issues"
+    "url": "https://github.com/Gustavo-Apolonio/poll-app/issues"
   },
-  "homepage": "https://github.com/Gustavo-Apolonio/pool-app#readme",
+  "homepage": "https://github.com/Gustavo-Apolonio/poll-app#readme",
   "devDependencies": {
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1"
