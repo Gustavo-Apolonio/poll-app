@@ -3,6 +3,7 @@
 ## TODOs
 
 - [ ] Add type on everything
+- [ ] Create pages.module
 - [ ] Test frontend
 - [ ] Create a doc on README
 - [ ] Configure environments

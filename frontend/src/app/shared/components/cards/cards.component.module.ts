@@ -9,6 +9,7 @@ import { PollCardComponent } from './components/poll-card/poll-card.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { IsSelectedOptionPipeModule } from '../../pipes';
 
 @NgModule({
   declarations: [CardsComponent, LoginCardComponent, PollCardComponent],
@@ -19,6 +20,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatInputModule,
     MatAutocompleteModule,
     MatButtonModule,
+    IsSelectedOptionPipeModule,
   ],
   providers: [],
   bootstrap: [CardsComponent, LoginCardComponent, PollCardComponent],

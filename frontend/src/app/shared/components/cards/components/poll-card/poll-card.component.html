@@ -1,3 +1,11 @@
-<div class="card">
-  <p>Poll Card Works!</p>
+<div
+  class="card"
+  [style]="isSelected | isSelectedOption : backgroundColor : boxShadow"
+  (click)="voteOption()"
+>
+  <div class="card-img" [style]="backgroundImg"></div>
+  <div class="card-div" [style]="borderColor"></div>
+  <div class="card-title">
+    <h1 class="card-title-text">{{ title }}</h1>
+  </div>
 </div>

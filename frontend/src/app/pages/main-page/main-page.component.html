@@ -1,1 +1,54 @@
-<p>Main Page working!</p>
+<section class="main">
+  <div class="main-header">
+    <div class="main-header-title">
+      <div class="main-header-title-info">
+        <h1 class="main-header-title-info-text">Inside Out Poll</h1>
+        <mat-divider></mat-divider>
+        <div class="main-header-title-info-id">
+          <h2 class="main-header-title-info-id-text">{{ pollId }}</h2>
+          <button
+            class="main-header-title-info-id-action"
+            mat-icon-button
+            aria-label="Copy poll id"
+            (click)="copyPollId()"
+          >
+            <mat-icon>file_copy</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="main-header-title-actions">
+        <button
+          class="main-header-title-actions-new"
+          mat-flat-button
+          color="primary"
+          aria-label="Create a new poll"
+          (click)="newPoll()"
+        >
+          New Poll
+        </button>
+        <button
+          class="main-header-title-actions-leave"
+          mat-icon-button
+          color="warn"
+          aria-label="Leave current poll"
+          (click)="leavePoll()"
+        >
+          <mat-icon>exit_to_app</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="main-header-votes"></div>
+  </div>
+  <div class="main-body">
+    <app-cards
+      *ngFor="let option of pollOptions; let i = index"
+      [type]="'card'"
+      [title]="option.title"
+      [color]="option.color"
+      [icon]="option.icon"
+      [index]="i"
+      [selected]="option.selected"
+      (selectEvent)="onSelectEvent($event)"
+    ></app-cards>
+  </div>
+</section>

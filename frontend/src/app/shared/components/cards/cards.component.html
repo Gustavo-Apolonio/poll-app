@@ -1,5 +1,13 @@
 <section [ngSwitch]="type">
   <app-login-card *ngSwitchCase="'main'" [title]="title"></app-login-card>
 
-  <app-poll-card *ngSwitchCase="'card'" [title]="title"></app-poll-card>
+  <app-poll-card
+    *ngSwitchCase="'card'"
+    [title]="title"
+    [color]="color"
+    [icon]="icon"
+    [index]="index"
+    [selected]="selected"
+    (selectEvent)="onSelectEvent($event)"
+  ></app-poll-card>
 </section>
