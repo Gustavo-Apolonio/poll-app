@@ -1,6 +1,9 @@
+$card-height: 350px;
+$card-width: 265px;
+
 .main {
-  width: 200px;
-  height: 334px;
+  width: $card-width;
+  height: $card-height;
   background: #d9d9d9;
   border-radius: 15px;
 
@@ -27,6 +30,11 @@
     align-items: center;
     justify-content: space-between;
     height: calc(100% - 37px);
+
+    &-top,
+    &-top * {
+      width: 100%;
+    }
 
     &-center {
       &-text {

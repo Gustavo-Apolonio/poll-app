@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { PollIdKey } from '../keys';
-import { Poll } from '../models';
+import { Poll, RequestStatus } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +14,7 @@ import { Poll } from '../models';
 export class PollService {
   private baseUrl: string = environment.services.poll.baseUrl;
   private _pollId: string = '';
+  private _requestStatus: RequestStatus = null;
 
   constructor(private http: HttpClient) {}
 
@@ -42,5 +43,13 @@ export class PollService {
   set pollId(id: string) {
     this._pollId = id;
     localStorage.setItem(PollIdKey, this._pollId);
+  }
+
+  get requestStatus(): RequestStatus {
+    return this._requestStatus;
+  }
+
+  set requestStatus(status: RequestStatus) {
+    this._requestStatus = status;
   }
 }

@@ -5,7 +5,7 @@ import { PollService } from 'src/app/shared/services';
 
 import { Socket } from 'ngx-socket-io';
 import { take } from 'rxjs';
-import { Poll } from 'src/app/shared/models';
+import { Option, Poll } from 'src/app/shared/models';
 
 @Component({
   selector: 'app-main-page',
@@ -13,42 +13,48 @@ import { Poll } from 'src/app/shared/models';
   styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent implements OnInit {
-  pollOptions: any[] = [
+  pollOptions: Option[] = [
     {
       icon: 'assets/images/anger.png',
       color: '#FF0000',
       title: 'anger',
       selected: false,
+      votes: 0,
     },
     {
       icon: 'assets/images/sadness.png',
       color: '#0000FF',
       title: 'sadness',
       selected: false,
+      votes: 0,
     },
     {
       icon: 'assets/images/disgust.png',
       color: '#009B00',
       title: 'disgust',
       selected: false,
+      votes: 0,
     },
     {
       icon: 'assets/images/fear.png',
       color: '#9100F0',
       title: 'fear',
       selected: false,
+      votes: 0,
     },
     {
       icon: 'assets/images/joy.png',
       color: '#F1F10E',
       title: 'joy',
       selected: false,
+      votes: 0,
     },
     {
       icon: 'assets/images/bingbong.png',
       color: '#FF72FF',
       title: 'bing bong',
       selected: false,
+      votes: 0,
     },
   ];
 

@@ -1,11 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { Observable, of } from 'rxjs';
-import { map, startWith, take } from 'rxjs/operators';
-
-import { Poll } from 'src/app/shared/models';
+import { map, startWith, debounceTime } from 'rxjs/operators';
+import { EnterPoll } from 'src/app/shared/models';
 import { PollService } from 'src/app/shared/services';
 
 @Component({
@@ -15,31 +13,30 @@ import { PollService } from 'src/app/shared/services';
 })
 export class LoginCardComponent implements OnInit {
   @Input() title: string = 'Poll';
+  @Input() set pollIds(pollIds: string[]) {
+    this.filteredPollIds = of(pollIds);
+  }
 
-  pollIdState: 'error' | 'loading' | 'success' | null = null;
   pollIdFormController: FormControl = new FormControl('', []);
-  pollIds: string[] = [];
   filteredPollIds: Observable<string[]>;
 
-  constructor(private pollService: PollService, private router: Router) {}
+  @Output() searchPollIdsEvent: EventEmitter<never>;
+  @Output() enterPollEvent: EventEmitter<EnterPoll>;
+
+  constructor(public pollService: PollService) {
+    this.searchPollIdsEvent = new EventEmitter<never>();
+    this.enterPollEvent = new EventEmitter<EnterPoll>();
+  }
 
   ngOnInit() {
-    this.searchPollIds();
-
     this.filteredPollIds = this.pollIdFormController.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value || ''))
     );
-  }
 
-  public searchPollIds(): void {
-    this.pollService
-      .listPollIds()
-      .pipe(take(1))
-      .subscribe((polls: Poll[]) => {
-        this.pollIds = polls.map((poll: Poll) => poll.id);
-        this.filteredPollIds = of(this.pollIds);
-      });
+    this.pollIdFormController.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => this.enterPoll(false));
   }
 
   private _filter(value: string): string[] {
@@ -51,41 +48,10 @@ export class LoginCardComponent implements OnInit {
     );
   }
 
-  public enterPoll(): void {
-    if (this.pollIdState == 'loading') return;
-
-    const { value } = this.pollIdFormController;
-
-    if (value) {
-      this.pollIdState = 'loading';
-
-      this.pollService
-        .enterPoll(value)
-        .pipe(take(1))
-        .subscribe({
-          next: this.successPolling.bind(this),
-          error: () => {
-            this.pollIdState = 'error';
-            this.pollIdFormController.setValue('');
-          },
-        });
-    }
-  }
-
-  public createPoll(): void {
-    if (this.pollIdState == 'loading') return;
-
-    this.pollIdState = 'loading';
-
-    this.pollService
-      .createPoll()
-      .pipe(take(1))
-      .subscribe(this.successPolling.bind(this));
-  }
-
-  private successPolling(response: Poll): void {
-    this.pollIdState = 'success';
-    this.pollService.pollId = response.id;
-    this.router.navigateByUrl('/');
+  public enterPoll(shouldCreate: boolean): void {
+    this.enterPollEvent.emit({
+      shouldCreate,
+      pollId: this.pollIdFormController.value,
+    });
   }
 }

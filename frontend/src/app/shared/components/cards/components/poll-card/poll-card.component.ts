@@ -12,8 +12,7 @@ export class PollCardComponent implements OnInit {
   @Input() index: number;
   @Input('selected') isSelected: boolean = false;
 
-  // TODO: type here
-  @Output() selectEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() selectEvent: EventEmitter<number> = new EventEmitter<number>();
 
   // CSS Variables
   boxShadow: string = `box-shadow: 0px 5px 10px 2.5px ${this.color};`;
@@ -37,6 +36,4 @@ export class PollCardComponent implements OnInit {
     this.borderColor = `border-color: ${this.color};`;
     this.cardStyle = this.boxShadow;
   }
-
-  // TODO: Finish logic to vote
 }

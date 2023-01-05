@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { EnterPoll } from '../../models';
 
 @Component({
   selector: 'app-cards',
@@ -12,10 +13,19 @@ export class CardsComponent {
   @Input() icon: string = 'assets/generic-vote.png';
   @Input() index: number;
   @Input() selected: boolean = false;
+  @Input() pollIds: string[] = [];
 
-  @Output() selectEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() selectEvent: EventEmitter<number> = new EventEmitter<number>();
 
-  onSelectEvent($event: any) {
+  @Output() searchPollIdsEvent: EventEmitter<never>;
+  @Output() enterPollEvent: EventEmitter<EnterPoll>;
+
+  constructor() {
+    this.searchPollIdsEvent = new EventEmitter<never>();
+    this.enterPollEvent = new EventEmitter<EnterPoll>();
+  }
+
+  onSelectEvent($event: number) {
     this.selectEvent.emit($event);
   }
 }

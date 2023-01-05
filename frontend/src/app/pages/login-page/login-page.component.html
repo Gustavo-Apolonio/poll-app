@@ -1,7 +1,13 @@
 <section class="login">
   <app-glassmorph>
     <div class="login-center">
-      <app-cards [type]="'main'" [title]="'Inside Out Poll'"></app-cards>
+      <app-cards
+        [type]="'main'"
+        [title]="'Inside Out Poll'"
+        [pollIds]="pollIds"
+        (searchPollIdsEvent)="searchPollIds()"
+        (enterPollEvent)="enterPollEvent($event)"
+      ></app-cards>
     </div>
   </app-glassmorph>
 </section>

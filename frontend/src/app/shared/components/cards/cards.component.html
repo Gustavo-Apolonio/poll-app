@@ -1,5 +1,11 @@
 <section [ngSwitch]="type">
-  <app-login-card *ngSwitchCase="'main'" [title]="title"></app-login-card>
+  <app-login-card
+    *ngSwitchCase="'main'"
+    [title]="title"
+    [pollIds]="pollIds"
+    (searchPollIdsEvent)="searchPollIdsEvent.emit()"
+    (enterPollEvent)="enterPollEvent.emit($event)"
+  ></app-login-card>
 
   <app-poll-card
     *ngSwitchCase="'card'"
