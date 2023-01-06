@@ -22,10 +22,13 @@ export class LoginPageComponent implements OnInit {
   }
 
   public searchPollIds(): void {
+    this.pollService.requestStatus = 'loading';
+
     this.pollService
       .listPollIds()
       .pipe(take(1))
       .subscribe((polls: Poll[]) => {
+        this.pollService.requestStatus = null;
         this.pollIds = polls.map((poll: Poll) => poll.id);
       });
   }
@@ -66,5 +69,6 @@ export class LoginPageComponent implements OnInit {
     this.pollService.requestStatus = 'success';
     this.pollService.pollId = response.id;
     this.router.navigateByUrl('/');
+    this.pollService.requestStatus = null;
   }
 }

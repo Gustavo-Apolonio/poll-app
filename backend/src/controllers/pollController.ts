@@ -29,7 +29,7 @@ class PollController {
 
       const response = { ...req.connectedPolls[pollId], id: pollId };
 
-      res.status(200).send(response);
+      return res.status(200).send(response);
     });
 
     this.router.post('/enter', (req: Request | any, res: Response) => {
@@ -42,14 +42,14 @@ class PollController {
       if (poll) {
         response = { ...poll, id: pollId };
 
-        res.status(200).send(response);
+        return res.status(200).send(response);
       } else {
         response = {
           error: 'Poll id not found',
           code: 404,
         };
 
-        res.status(404).send(response);
+        return res.status(404).send(response);
       }
     });
 
@@ -72,18 +72,50 @@ class PollController {
 
           return isAvailable;
         });
-      res.status(200).send(response);
+
+      return res.status(200).send(response);
     });
 
     this.router.delete(
       '/delete/:pollId',
       (req: Request | any, res: Response) => {
+        const userId = req.body.userId;
+
         const connectedPolls = req.connectedPolls;
         const pollId = req.params.pollId;
 
-        delete connectedPolls[pollId];
+        let response;
 
-        res.status(200).end();
+        if (!pollId || pollId == '') {
+          response = {
+            error: 'Poll id not sent',
+            code: 400,
+          };
+
+          return res.status(400).send(response);
+        }
+
+        const poll = connectedPolls[pollId];
+
+        if (!poll) {
+          response = {
+            error: 'Poll not found',
+            code: 404,
+          };
+          return res.status(404).send(response);
+        }
+
+        const connectedUsers = poll.connectedUsers;
+
+        delete connectedUsers[userId];
+
+        if (Object.keys(connectedUsers).length <= 0) {
+          delete connectedPolls[pollId];
+
+          return res.status(204).end();
+        }
+
+        return res.status(200).end();
       }
     );
   }

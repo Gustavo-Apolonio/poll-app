@@ -50,7 +50,10 @@
         type="submit"
         (click)="$event.preventDefault(); enterPoll(true)"
         mat-flat-button
-        [disabled]="pollService.requestStatus == 'loading'"
+        [disabled]="
+          pollIdFormController.value != '' ||
+          pollService.requestStatus == 'loading'
+        "
       >
         Criar um poll
       </button>

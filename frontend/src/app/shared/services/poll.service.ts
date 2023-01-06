@@ -30,10 +30,10 @@ export class PollService {
     return this.http.post<Poll>(`${this.baseUrl}/enter`, { pollId });
   }
 
-  leavePoll(pollId: string): void {
+  leavePoll(pollId: string): Observable<any> {
     this.pollId = '';
     localStorage.removeItem(PollIdKey);
-    this.http.delete(`${this.baseUrl}/delete/${pollId}`);
+    return this.http.delete(`${this.baseUrl}/delete/${pollId}`);
   }
 
   get pollId(): string {

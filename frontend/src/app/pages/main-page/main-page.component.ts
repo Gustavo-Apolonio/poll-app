@@ -104,7 +104,9 @@ export class MainPageComponent implements OnInit {
   }
 
   leavePoll(): void {
-    this.pollService.leavePoll(this.pollId);
-    this.router.navigateByUrl('/login');
+    this.pollService
+      .leavePoll(this.pollId)
+      .pipe(take(1))
+      .subscribe({ next: () => this.router.navigateByUrl('/login') });
   }
 }
