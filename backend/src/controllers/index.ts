@@ -1,8 +1,8 @@
-import { Controller } from '../models/ControllerModel';
+import { IController } from '../models';
 
 import pollController from './pollController';
 
-const Controllers: Controller[] = [
+const Controllers: IController[] = [
   { route: '/poll', router: pollController.router },
 ];
 

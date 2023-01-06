@@ -1,11 +1,14 @@
-import express, { Request, Response } from 'express';
 import { Server } from 'http';
+
+import express, { NextFunction, Response } from 'express';
 import * as SocketIO from 'socket.io';
+
+import { IPoll, IRequest, IUser } from './models';
 
 class AppSocket {
   private io: SocketIO.Server;
 
-  connectedPolls: any = {};
+  connectedPolls: IPoll[] = [];
 
   constructor(server: Server, app: express.Application) {
     this.io = new SocketIO.Server(server, {
@@ -14,7 +17,7 @@ class AppSocket {
 
     this.configureSockets();
 
-    app.use((req: Request | any, res: Response, next) => {
+    app.use((req: IRequest, res: Response, next: NextFunction) => {
       req.io = this.io;
       req.connectedPolls = this.connectedPolls;
 
@@ -24,24 +27,39 @@ class AppSocket {
 
   private configureSockets(): void {
     this.io.on('connection', (socket: SocketIO.Socket) => {
-      socket.on('enter-poll', (userSocket: any) => {
-        const { pollId, userId } = userSocket;
-        let _pollId = pollId.toString();
-        let _userId = userId.toString();
-        const poll = this.connectedPolls[_pollId];
-
-        if (_pollId && _userId && poll) {
-          let connectedUsers: any = poll.connectedUsers;
-
-          connectedUsers = { ...connectedUsers, [_userId]: socket.id };
-
-          this.connectedPolls[_pollId].connectedUsers = Object.assign(
-            connectedUsers
+      socket.on(
+        'enter-poll',
+        ({ pollId, userId }: { pollId: string; userId: string }) => {
+          const poll: IPoll | undefined = this.connectedPolls.find(
+            (poll: IPoll) => poll.id == pollId
           );
-        } else {
-          this.io.to(socket.id).emit('non-existing-poll');
+
+          if (pollId && userId && poll) {
+            let connectedUsers: IUser[] = poll.connectedUsers;
+
+            const connectedUser: IUser | undefined = connectedUsers.find(
+              (_connectedUser: IUser) => _connectedUser.id == userId
+            );
+
+            if (connectedUser) {
+              connectedUsers.splice(connectedUsers.indexOf(connectedUser), 1);
+
+              connectedUser.connectionId = socket.id;
+
+              connectedUsers = [...connectedUsers, connectedUser];
+            } else {
+              connectedUsers = [
+                ...connectedUsers,
+                { id: userId, connectionId: socket.id },
+              ];
+            }
+
+            poll.connectedUsers = [...connectedUsers];
+          } else {
+            this.io.to(socket.id).emit('non-existing-poll');
+          }
         }
-      });
+      );
     });
   }
 }

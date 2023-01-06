@@ -1,121 +1,129 @@
-import { Request, Response, Router } from 'express';
+import { Response, Router } from 'express';
 
-import { GuidService } from '../utils/guidService';
+import { IPoll, IRequest, IUser } from '../models';
+import { ErrorStatus, SuccessStatus } from '../enums';
+
+import { ErrorService, GuidService } from '../utils';
 
 class PollController {
   public router: Router;
-  private guid: GuidService;
-
   private DAY: number = 86400000;
 
   constructor() {
-    this.guid = new GuidService();
-
     this.router = Router();
 
     this.configureRouter();
   }
 
   private configureRouter(): void {
-    this.router.post('/create', (req: Request | any, res: Response) => {
-      const userId = req.body.userId;
+    this.router.post(
+      '/create',
+      (req: IRequest, res: Response): Response => {
+        const userId: string = req.body.userId;
 
-      const pollId = this.guid.generate();
+        const pollId: string = GuidService.generate();
 
-      req.connectedPolls[pollId] = {
-        createdOn: new Date(),
-        connectedUsers: { [userId]: '' },
-      };
-
-      const response = { ...req.connectedPolls[pollId], id: pollId };
-
-      return res.status(200).send(response);
-    });
-
-    this.router.post('/enter', (req: Request | any, res: Response) => {
-      const pollId = req.body.pollId;
-
-      const poll = req.connectedPolls[pollId];
-
-      let response: any;
-
-      if (poll) {
-        response = { ...poll, id: pollId };
-
-        return res.status(200).send(response);
-      } else {
-        response = {
-          error: 'Poll id not found',
-          code: 404,
+        const poll: IPoll = {
+          createdOn: new Date(),
+          id: pollId,
+          connectedUsers: [{ id: userId, connectionId: '' }],
         };
 
-        return res.status(404).send(response);
+        req.connectedPolls?.push(poll);
+
+        return res.status(SuccessStatus.OK).send(poll);
       }
-    });
+    );
 
-    this.router.get('/', (req: Request | any, res: Response) => {
-      const connectedPolls = req.connectedPolls;
-      const response = Object.keys(connectedPolls)
-        .map((pollId) => {
-          const poll = { ...connectedPolls[pollId], id: pollId };
+    this.router.post(
+      '/enter',
+      (req: IRequest, res: Response): Response => {
+        const pollId: string = req.body.pollId;
 
-          return poll;
-        })
-        .filter((poll) => {
-          const date = new Date();
-          date.setDate(date.getDate() - 1);
-          const isAvailable = poll.createdOn - (date as any) <= this.DAY * 2;
+        const poll: IPoll | undefined = req.connectedPolls?.find(
+          (poll: IPoll) => poll.id == pollId
+        );
 
-          if (!isAvailable) {
-            delete connectedPolls[poll.id];
+        if (!poll)
+          return res
+            .status(ErrorStatus.NotFound)
+            .send(ErrorService.NotFound('Poll not found.'));
+
+        return res.status(SuccessStatus.OK).send(poll);
+      }
+    );
+
+    this.router.get(
+      '/',
+      (req: IRequest, res: Response): Response => {
+        const connectedPolls: IPoll[] = req.connectedPolls || [];
+
+        const response: IPoll[] = connectedPolls.filter(
+          (poll: IPoll, index: number) => {
+            const currentDate: Date = new Date();
+            currentDate.setDate(currentDate.getDate() - 1);
+            const isAvailable: boolean =
+              poll.createdOn.getDate() - currentDate.getDate() <= this.DAY * 2;
+
+            if (!isAvailable) connectedPolls.splice(index, 1);
+
+            return isAvailable;
           }
+        );
 
-          return isAvailable;
-        });
-
-      return res.status(200).send(response);
-    });
+        return res.status(SuccessStatus.OK).send(response);
+      }
+    );
 
     this.router.delete(
       '/delete/:pollId',
-      (req: Request | any, res: Response) => {
-        const userId = req.body.userId;
+      (req: IRequest, res: Response): Response => {
+        const userId: string = req.body.userId;
 
-        const connectedPolls = req.connectedPolls;
-        const pollId = req.params.pollId;
+        const connectedPolls: IPoll[] = req.connectedPolls || [];
+        const pollId: string = req.params.pollId;
 
-        let response;
+        if (connectedPolls.length == 0)
+          return res
+            .status(ErrorStatus.NotFound)
+            .send(ErrorService.NotFound('There is no polls to delete'));
 
-        if (!pollId || pollId == '') {
-          response = {
-            error: 'Poll id not sent',
-            code: 400,
-          };
+        if (!pollId || pollId == '')
+          return res
+            .status(ErrorStatus.BadRequest)
+            .send(ErrorService.BadRequest('Poll id not sent'));
 
-          return res.status(400).send(response);
-        }
+        const poll: IPoll | undefined = connectedPolls.find(
+          (poll: IPoll) => poll.id == pollId
+        );
 
-        const poll = connectedPolls[pollId];
+        if (poll) {
+          const connectedUsers: IUser[] = poll.connectedUsers;
+          const connectedUser: IUser | undefined = poll.connectedUsers.find(
+            (_connectedUser: IUser) => _connectedUser.id == userId
+          );
 
-        if (!poll) {
-          response = {
-            error: 'Poll not found',
-            code: 404,
-          };
-          return res.status(404).send(response);
-        }
+          if (connectedUser) {
+            connectedUsers.splice(
+              poll.connectedUsers.indexOf(connectedUser),
+              1
+            );
 
-        const connectedUsers = poll.connectedUsers;
+            if (connectedUsers.length == 0) {
+              connectedPolls.splice(connectedPolls.indexOf(poll), 1);
 
-        delete connectedUsers[userId];
+              return res.status(SuccessStatus.OkNoContent).end();
+            }
 
-        if (Object.keys(connectedUsers).length <= 0) {
-          delete connectedPolls[pollId];
-
-          return res.status(204).end();
-        }
-
-        return res.status(200).end();
+            return res.status(SuccessStatus.OkNoContent).end();
+          } else
+            return res
+              .status(ErrorStatus.NotFound)
+              .send(ErrorService.NotFound('User not found on connected users'));
+        } else
+          return res
+            .status(ErrorStatus.NotFound)
+            .send(ErrorService.NotFound('Poll not found'));
       }
     );
   }

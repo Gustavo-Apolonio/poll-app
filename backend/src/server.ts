@@ -1,9 +1,9 @@
 import app from './app';
 import Controllers from './controllers';
 
-import { Controller } from './models';
+import { IController } from './models';
 
-Controllers.forEach((controller: Controller) => {
+Controllers.forEach((controller: IController) => {
   app.configureNewRoute(controller.route, controller.router);
 });
 
