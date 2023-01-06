@@ -2,13 +2,17 @@
 
 ## TODOs
 
+- [ ] Change header to core/components
+- [ ] Add header counting votes
+- [ ] Treat errors
+  - [ ] Show 401 modal on error
+
+---
+
 - [ ] Add type on everything
-- [ ] Create pages.module
-- [ ] Test frontend
 - [ ] Create a doc on README
 - [ ] Configure environments
-- [ ] Configure User ID for locate backend
-- [ ] Show 401 modal on error
+- [ ] Test frontend
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.10.
 
