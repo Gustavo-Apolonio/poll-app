@@ -6,3 +6,4 @@
 - [ ] Create a logger
 - [ ] Test backend
 - [ ] Create a doc on README
+- [ ] Create ErrorResponse

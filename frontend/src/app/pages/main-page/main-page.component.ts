@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { PollService } from 'src/app/shared/services';
+import { PollService, UserService } from 'src/app/shared/services';
 
 import { Socket } from 'ngx-socket-io';
 import { take } from 'rxjs';
@@ -63,13 +63,17 @@ export class MainPageComponent implements OnInit {
   constructor(
     private socket: Socket,
     private pollService: PollService,
+    private userService: UserService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.pollId = this.pollService.pollId;
 
-    this.socket.emit('enter-poll', { pollId: this.pollService.pollId });
+    this.socket.emit('enter-poll', {
+      pollId: this.pollService.pollId,
+      userId: this.userService.userId,
+    });
     this.socket.on('non-existing-poll', () => {
       this.pollService.leavePoll(this.pollService.pollId || '');
       this.router.navigateByUrl('/login');

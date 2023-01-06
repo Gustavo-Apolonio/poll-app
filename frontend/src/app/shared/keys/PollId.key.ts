@@ -1,1 +1,1 @@
-export const PollIdKey: string = 'pollId';
+export const PollIdKey: string = 'POLL_ID';

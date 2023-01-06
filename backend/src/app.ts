@@ -3,6 +3,7 @@ import cors from 'cors';
 import { Server, createServer } from 'http';
 
 import AppSocket from './socket.io';
+import { UserGuard } from './guards';
 
 class App {
   public app: express.Application;
@@ -16,6 +17,7 @@ class App {
     this.HOSTNAME = hostname;
 
     this.configureRoutes();
+    UserGuard.configure(this.app);
 
     this.server = createServer(this.app);
 

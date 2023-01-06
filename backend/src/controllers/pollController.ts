@@ -18,11 +18,13 @@ class PollController {
 
   private configureRouter(): void {
     this.router.post('/create', (req: Request | any, res: Response) => {
+      const userId = req.body.userId;
+
       const pollId = this.guid.generate();
 
       req.connectedPolls[pollId] = {
         createdOn: new Date(),
-        connectedUsers: [],
+        connectedUsers: { [userId]: '' },
       };
 
       const response = { ...req.connectedPolls[pollId], id: pollId };

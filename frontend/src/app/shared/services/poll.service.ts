@@ -31,7 +31,7 @@ export class PollService {
   }
 
   leavePoll(pollId: string): void {
-    this._pollId = '';
+    this.pollId = '';
     localStorage.removeItem(PollIdKey);
     this.http.delete(`${this.baseUrl}/delete/${pollId}`);
   }

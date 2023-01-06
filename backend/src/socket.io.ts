@@ -25,12 +25,19 @@ class AppSocket {
   private configureSockets(): void {
     this.io.on('connection', (socket: SocketIO.Socket) => {
       socket.on('enter-poll', (userSocket: any) => {
-        const { pollId } = userSocket;
-        let id = pollId.toString();
-        const poll = this.connectedPolls[id];
+        const { pollId, userId } = userSocket;
+        let _pollId = pollId.toString();
+        let _userId = userId.toString();
+        const poll = this.connectedPolls[_pollId];
 
-        if (pollId && poll) {
-          this.connectedPolls[id]?.connectedUsers?.push(socket.id);
+        if (_pollId && _userId && poll) {
+          let connectedUsers: any = poll.connectedUsers;
+
+          connectedUsers = { ...connectedUsers, [_userId]: socket.id };
+
+          this.connectedPolls[_pollId].connectedUsers = Object.assign(
+            connectedUsers
+          );
         } else {
           this.io.to(socket.id).emit('non-existing-poll');
         }

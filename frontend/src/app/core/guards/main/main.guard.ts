@@ -25,8 +25,9 @@ export class MainGuard implements CanActivate {
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree> {
     const hasPoll: boolean = this.authService.hasPoll;
+    const hasUserId: boolean = this.authService.hasUserId;
 
-    if (hasPoll) {
+    if (hasPoll && hasUserId) {
       return true;
     }
 
