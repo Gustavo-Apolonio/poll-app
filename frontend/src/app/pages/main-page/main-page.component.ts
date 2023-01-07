@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { PollService, UserService } from 'src/app/shared/services';
 
 import { Socket } from 'ngx-socket-io';
-import { take } from 'rxjs';
+import { mergeMap, take } from 'rxjs';
 import { Option, Poll } from 'src/app/shared/models';
 
 @Component({
@@ -103,14 +103,8 @@ export class MainPageComponent implements OnInit {
     this.pollService
       .leavePoll(this.pollId)
       .pipe(take(1))
-      .subscribe({
-        next: () => {
-          this.pollService
-            .createPoll()
-            .pipe(take(1))
-            .subscribe(this.successPolling.bind(this));
-        },
-      });
+      .pipe(mergeMap(() => this.pollService.createPoll().pipe(take(1))))
+      .subscribe(this.successPolling.bind(this));
   }
 
   onLeavePollEvent(): void {
