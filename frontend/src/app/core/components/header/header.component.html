@@ -1,0 +1,48 @@
+<section class="header">
+  <div class="header-title">
+    <div class="header-title-info">
+      <h1 class="header-title-info-text">Inside Out Poll</h1>
+      <mat-divider></mat-divider>
+      <div class="header-title-info-id">
+        <h2 class="header-title-info-id-text">{{ pollId }}</h2>
+        <button
+          class="header-title-info-id-action"
+          mat-icon-button
+          aria-label="Copy poll id"
+          (click)="copyPollId()"
+        >
+          <mat-icon>file_copy</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="header-title-actions">
+      <button
+        class="header-title-actions-new"
+        mat-flat-button
+        color="primary"
+        aria-label="Create a new poll"
+        (click)="newPollEvent.emit()"
+      >
+        New Poll
+      </button>
+      <button
+        class="header-title-actions-leave"
+        mat-icon-button
+        color="warn"
+        aria-label="Leave current poll"
+        (click)="leavePollEvent.emit()"
+      >
+        <mat-icon>exit_to_app</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="header-votes" *ngIf="pollOptions.length">
+    <app-header-vote
+      *ngFor="let pollOption of pollOptions"
+      [title]="pollOption.title"
+      [votes]="pollOption.votes"
+      [color]="pollOption.color"
+      class="header-votes-app"
+    ></app-header-vote>
+  </div>
+</section>

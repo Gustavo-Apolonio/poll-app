@@ -81,32 +81,47 @@ export class MainPageComponent implements OnInit {
   }
 
   onSelectEvent(selectedIndex: number): void {
+    let selectedOption: Option | undefined;
+
     this.pollOptions.forEach((pollOption, index) => {
-      if (index == selectedIndex) pollOption.selected = !pollOption.selected;
-      else pollOption.selected = false;
+      if (index == selectedIndex) {
+        pollOption.selected = !pollOption.selected;
+        if (pollOption.selected) pollOption.votes += 1;
+        else pollOption.votes -= 1;
+
+        selectedOption = pollOption;
+      } else {
+        pollOption.selected = false;
+        if (pollOption.votes > 0) pollOption.votes -= 1;
+      }
     });
+
+    console.log(selectedOption);
   }
 
-  copyPollId(): void {
-    window.navigator.clipboard.writeText(this.pollId);
-  }
-
-  newPoll(): void {
+  onNewPollEvent() {
     this.pollService
-      .createPoll()
+      .leavePoll(this.pollId)
       .pipe(take(1))
-      .subscribe(this.successPolling.bind(this));
+      .subscribe({
+        next: () => {
+          this.pollService
+            .createPoll()
+            .pipe(take(1))
+            .subscribe(this.successPolling.bind(this));
+        },
+      });
+  }
+
+  onLeavePollEvent(): void {
+    this.pollService
+      .leavePoll(this.pollId)
+      .pipe(take(1))
+      .subscribe({ next: () => this.router.navigateByUrl('/login') });
   }
 
   private successPolling(response: Poll): void {
     this.pollService.pollId = response.id;
     window.location.reload();
-  }
-
-  leavePoll(): void {
-    this.pollService
-      .leavePoll(this.pollId)
-      .pipe(take(1))
-      .subscribe({ next: () => this.router.navigateByUrl('/login') });
   }
 }

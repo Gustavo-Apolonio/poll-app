@@ -1,15 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-
 import { MainPageComponent } from './main-page.component';
 import { MainPageRoutingModule } from './main-page-routing.module';
 import { ComponentsModule } from 'src/app/shared/components';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { CoreComponentsModule } from 'src/app/core/components';
 
 const config: SocketIoConfig = { url: 'http://localhost:5000' };
 
@@ -20,9 +17,7 @@ const config: SocketIoConfig = { url: 'http://localhost:5000' };
     MainPageRoutingModule,
     SocketIoModule.forRoot(config),
     ComponentsModule,
-    MatDividerModule,
-    MatIconModule,
-    MatButtonModule,
+    CoreComponentsModule,
   ],
   providers: [],
   bootstrap: [MainPageComponent],

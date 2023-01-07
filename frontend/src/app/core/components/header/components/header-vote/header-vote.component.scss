@@ -1,0 +1,30 @@
+.vote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  border: 1px solid #ededed;
+  width: 180px;
+  height: calc(100% - (10px * 2));
+  padding: 10px 0px;
+
+  &-title,
+  &-value {
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 0.3em;
+
+    color: #000000;
+  }
+
+  &-value {
+    letter-spacing: 0em !important;
+  }
+}
+
+h2,
+h3,
+h4 {
+  margin: 0px;
+}

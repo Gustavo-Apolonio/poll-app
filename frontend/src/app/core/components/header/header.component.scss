@@ -1,0 +1,63 @@
+.header {
+  width: 100%;
+  max-height: 100%;
+
+  display: flex;
+  align-content: flex-start;
+  justify-content: space-between;
+
+  &-title {
+    display: flex;
+    align-items: center;
+
+    width: calc(25% - 16px);
+
+    &-info {
+      width: 50%;
+
+      margin-right: 8px;
+
+      &-text {
+        margin: 0px;
+        font-weight: 500;
+      }
+
+      &-id {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &-text {
+          margin: 0px;
+          text-transform: uppercase;
+          font-weight: 500;
+          text-overflow: ellipsis;
+          max-width: 80%;
+          overflow-x: hidden;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    &-actions {
+      width: 50%;
+      height: 100%;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+
+      &-leave {
+        border-radius: 10px;
+      }
+    }
+  }
+
+  &-votes {
+    height: 10vh;
+    max-height: 10vh;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

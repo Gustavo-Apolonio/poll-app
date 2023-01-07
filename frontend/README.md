@@ -3,7 +3,6 @@
 ## TODOs
 
 - [ ] Change header to core/components
-- [ ] Add header counting votes
 - [ ] Treat errors
   - [ ] Show 401 modal on error
 - [ ] Change everything to english
