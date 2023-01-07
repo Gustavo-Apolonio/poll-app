@@ -2,7 +2,6 @@
 
 ## TODOs
 
-- [ ] Change header to core/components
 - [ ] Treat errors
   - [ ] Show 401 modal on error
 - [ ] Change everything to english
