@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { PollService, UserService } from 'src/app/shared/services';
+import { PollService, UserService, VoteService } from 'src/app/shared/services';
 
 import { Socket } from 'ngx-socket-io';
 import { mergeMap, take } from 'rxjs';
-import { Option, Poll } from 'src/app/shared/models';
+import { Option, Poll, PollVotes, Vote } from 'src/app/shared/models';
 
 @Component({
   selector: 'app-main-page',
@@ -63,6 +63,7 @@ export class MainPageComponent implements OnInit {
   constructor(
     private socket: Socket,
     private pollService: PollService,
+    private voteService: VoteService,
     private userService: UserService,
     private router: Router
   ) {}
@@ -74,29 +75,58 @@ export class MainPageComponent implements OnInit {
       pollId: this.pollService.pollId,
       userId: this.userService.userId,
     });
+    this.socket.on('enter-poll', (votes: PollVotes) => {
+      votes.pollVotes.forEach((vote: Vote) => {
+        let option: Option | undefined = this.pollOptions.find(
+          (pollOption: Option) => pollOption.title == vote.title
+        );
+
+        if (option && vote.quantity != undefined) option.votes = vote.quantity;
+      });
+
+      if (votes.userVote) {
+        this.onSelectEvent(votes.userVote.title, false);
+      }
+    });
+
     this.socket.on('non-existing-poll', () => {
       this.pollService.leavePoll(this.pollService.pollId || '');
       this.router.navigateByUrl('/login');
     });
+
+    this.socket.on('vote-submitted', (votes: Vote[]) => {
+      votes.forEach(({ title, quantity }) => {
+        let option: Option | undefined = this.pollOptions.find(
+          (pollOption: Option) => pollOption.title == title
+        );
+
+        if (option) option.votes = quantity || 0;
+      });
+    });
   }
 
-  onSelectEvent(selectedIndex: number): void {
-    let selectedOption: Option | undefined;
+  onSelectEvent(selectedTitle: string, shouldIncrement: boolean = true): void {
+    this.pollOptions.forEach((pollOption: Option) => {
+      this.selectOption(pollOption, selectedTitle);
 
-    this.pollOptions.forEach((pollOption, index) => {
-      if (index == selectedIndex) {
-        pollOption.selected = !pollOption.selected;
-        if (pollOption.selected) pollOption.votes += 1;
-        else pollOption.votes -= 1;
-
-        selectedOption = pollOption;
-      } else {
-        pollOption.selected = false;
-        if (pollOption.votes > 0) pollOption.votes -= 1;
-      }
+      if (shouldIncrement) this.voteOption(pollOption);
     });
+  }
 
-    console.log(selectedOption);
+  private selectOption(option: Option, selectedTitle: string): Option {
+    if (option.title == selectedTitle) option.selected = !option.selected;
+    else option.selected = false;
+
+    return option;
+  }
+
+  private voteOption(pollOption: Option): void {
+    if (pollOption.selected) {
+      pollOption.votes += 1;
+      this.voteService
+        .add(this.pollId, { title: pollOption.title })
+        .subscribe();
+    } else if (pollOption.votes > 0) pollOption.votes -= 1;
   }
 
   onNewPollEvent() {

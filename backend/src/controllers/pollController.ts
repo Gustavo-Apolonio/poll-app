@@ -27,6 +27,32 @@ class PollController {
           createdOn: new Date(),
           id: pollId,
           connectedUsers: [{ id: userId, connectionId: '' }],
+          votes: [
+            {
+              title: 'anger',
+              quantity: 0,
+            },
+            {
+              title: 'sadness',
+              quantity: 0,
+            },
+            {
+              title: 'disgust',
+              quantity: 0,
+            },
+            {
+              title: 'fear',
+              quantity: 0,
+            },
+            {
+              title: 'joy',
+              quantity: 0,
+            },
+            {
+              title: 'bing bong',
+              quantity: 0,
+            },
+          ],
         };
 
         req.connectedPolls?.push(poll);

@@ -9,12 +9,11 @@
   </div>
   <div class="main-body">
     <app-cards
-      *ngFor="let option of pollOptions; let i = index"
+      *ngFor="let option of pollOptions"
       [type]="'card'"
       [title]="option.title"
       [color]="option.color"
       [icon]="option.icon"
-      [index]="i"
       [selected]="option.selected"
       (selectEvent)="onSelectEvent($event)"
     ></app-cards>

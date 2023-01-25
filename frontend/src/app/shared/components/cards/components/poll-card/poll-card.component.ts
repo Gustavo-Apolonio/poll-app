@@ -9,10 +9,9 @@ export class PollCardComponent implements OnInit {
   @Input() title: string = 'Poll';
   @Input() color: string = '#EDEDED';
   @Input() icon: string = 'assets/generic-vote.png';
-  @Input() index: number;
   @Input('selected') isSelected: boolean = false;
 
-  @Output() selectEvent: EventEmitter<number> = new EventEmitter<number>();
+  @Output() selectEvent: EventEmitter<string> = new EventEmitter<string>();
 
   // CSS Variables
   boxShadow: string = `box-shadow: 0px 5px 10px 2.5px ${this.color};`;
@@ -26,7 +25,7 @@ export class PollCardComponent implements OnInit {
   }
 
   voteOption(): void {
-    this.selectEvent.emit(this.index);
+    this.selectEvent.emit(this.title);
   }
 
   private setCssVariables(): void {

@@ -8,6 +8,9 @@ export const environment = {
     poll: {
       baseUrl: 'http://localhost:5000/poll',
     },
+    vote: {
+      baseUrl: 'http://localhost:5000/vote',
+    },
   },
 };
 

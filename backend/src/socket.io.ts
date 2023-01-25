@@ -3,7 +3,7 @@ import { Server } from 'http';
 import express, { NextFunction, Response } from 'express';
 import * as SocketIO from 'socket.io';
 
-import { IPoll, IRequest, IUser } from './models';
+import { IPoll, IPollVotes, IRequest, IUser } from './models';
 
 class AppSocket {
   private io: SocketIO.Server;
@@ -37,7 +37,7 @@ class AppSocket {
           if (pollId && userId && poll) {
             let connectedUsers: IUser[] = poll.connectedUsers;
 
-            const connectedUser: IUser | undefined = connectedUsers.find(
+            let connectedUser: IUser | undefined = connectedUsers.find(
               (_connectedUser: IUser) => _connectedUser.id == userId
             );
 
@@ -48,13 +48,22 @@ class AppSocket {
 
               connectedUsers = [...connectedUsers, connectedUser];
             } else {
-              connectedUsers = [
-                ...connectedUsers,
-                { id: userId, connectionId: socket.id },
-              ];
+              connectedUser = {
+                id: userId,
+                connectionId: socket.id,
+              };
+
+              connectedUsers = [...connectedUsers, connectedUser];
             }
 
             poll.connectedUsers = [...connectedUsers];
+
+            const pollVotes: IPollVotes = {
+              pollVotes: poll.votes,
+              userVote: connectedUser.vote,
+            };
+
+            this.io.to(socket.id).emit('enter-poll', pollVotes);
           } else {
             this.io.to(socket.id).emit('non-existing-poll');
           }

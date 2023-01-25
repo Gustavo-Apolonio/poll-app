@@ -11,21 +11,22 @@ export class CardsComponent {
   @Input() title: string = 'Poll';
   @Input() color: string = '#EDEDED';
   @Input() icon: string = 'assets/generic-vote.png';
-  @Input() index: number;
   @Input() selected: boolean = false;
   @Input() pollIds: string[] = [];
 
-  @Output() selectEvent: EventEmitter<number> = new EventEmitter<number>();
+  @Output() selectEvent: EventEmitter<string>;
 
   @Output() searchPollIdsEvent: EventEmitter<never>;
   @Output() enterPollEvent: EventEmitter<EnterPoll>;
 
   constructor() {
+    this.selectEvent = new EventEmitter<string>();
+
     this.searchPollIdsEvent = new EventEmitter<never>();
     this.enterPollEvent = new EventEmitter<EnterPoll>();
   }
 
-  onSelectEvent($event: number) {
+  onSelectEvent($event: string) {
     this.selectEvent.emit($event);
   }
 }

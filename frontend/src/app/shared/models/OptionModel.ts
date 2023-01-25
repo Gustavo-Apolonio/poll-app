@@ -4,5 +4,4 @@ export interface Option {
   icon: string;
   selected: boolean;
   votes: number;
-  index?: number;
 }
